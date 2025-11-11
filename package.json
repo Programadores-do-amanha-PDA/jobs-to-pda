@@ -1,0 +1,45 @@
+{
+  "name": "community-jobs-extension",
+  "version": "0.0.1",
+  "description": "Firefox extension for Programadores do Amanhã community",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev:webpack": "webpack -w",
+    "dev:firefox": "web-ext run --source-dir=. --keep-profile-changes",
+    "lint": "web-ext lint",
+    "format": "yarn lint && prettier --write .",
+    "build": "yarn format && webpack && web-ext build -a dist --overwrite-dest",
+    "prepare": "husky"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.11",
+    "@types/react": "^18.2.74",
+    "@types/react-dom": "^18.2.23",
+    "@types/webextension-polyfill": "^0.10.7",
+    "css-loader": "^7.0.0",
+    "html-webpack-plugin": "^5.6.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "3.2.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "style-loader": "^3.3.4",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.4.3",
+    "web-ext": "^7.11.0",
+    "webextension-polyfill": "^0.10.0",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  },
+  "dependencies": {
+    "string-strip-html": "^13.5.0"
+  }
+}
