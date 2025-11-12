@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev:webpack": "webpack -w",
-    "dev:firefox": "web-ext run --source-dir=. --keep-profile-changes",
+    "dev:firefox": "web-ext run --source-dir=. --firefox=flatpak:org.mozilla.firefox --ignore-files=node_modules/ src/ webpack.config.js tsconfig.json",
     "lint": "web-ext lint",
     "format": "yarn lint && prettier --write .",
     "build": "yarn format && webpack && web-ext build -a dist --overwrite-dest",
@@ -25,6 +25,7 @@
     "html-webpack-plugin": "^5.6.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
+    "postcss-loader": "^8.2.0",
     "prettier": "3.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -40,6 +41,9 @@
     "**/*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
-    "string-strip-html": "^13.5.0"
+    "@tailwindcss/postcss": "^4.1.17",
+    "postcss": "^8.5.6",
+    "string-strip-html": "^13.5.0",
+    "tailwindcss": "^4.1.17"
   }
 }

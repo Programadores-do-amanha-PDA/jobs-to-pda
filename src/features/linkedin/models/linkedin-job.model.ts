@@ -1,4 +1,4 @@
-class JobM {
+class LinkedinJobM {
   public id: string;
   public title: string;
   public isVerified: boolean;
@@ -6,6 +6,11 @@ class JobM {
   public description: string;
   public details: string[];
   public company: { name: string; img: string };
+
+  public static extractJobIdFromUrl(): string | null {
+    const urlMatch = window.location.href.match(/\/jobs\/view\/(\d+)/);
+    return urlMatch ? urlMatch[1] : null;
+  }
 
   constructor(jobId: string, jobPage: Element) {
     this.id = jobId;
@@ -20,7 +25,7 @@ class JobM {
   public extractJobTitleByJobPage(jobPage: Element): string {
     // Select title Element
     const jobTitleElement = jobPage.querySelector(
-      "div.job-details-jobs-unified-top-card__job-title > h1 > a",
+      "div.job-details-jobs-unified-top-card__job-title > h1",
     );
 
     return jobTitleElement?.textContent?.trim() || "";
@@ -90,12 +95,14 @@ class JobM {
   }
 
   public extractJobDescriptionByJobPage(jobPage: Element): string {
-    const jobTitleElement = jobPage.querySelector(
+    const jobDescriptionContainerElement = jobPage.querySelector(
       ".jobs-description__container",
     );
 
-    if (jobTitleElement) {
-      const clonedElement = jobTitleElement.cloneNode(true) as Element;
+    if (jobDescriptionContainerElement) {
+      const clonedElement = jobDescriptionContainerElement.cloneNode(
+        true,
+      ) as Element;
       const h2Element = clonedElement.querySelector("h2.text-heading-large");
       if (h2Element) {
         h2Element.remove();
@@ -107,4 +114,4 @@ class JobM {
   }
 }
 
-export default JobM;
+export default LinkedinJobM;
