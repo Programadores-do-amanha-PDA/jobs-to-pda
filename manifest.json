@@ -11,6 +11,7 @@
   },
   "permissions": [
     "storage",
+    "tabs",
     "webRequest",
     "webRequestBlocking",
     "webRequestFilterResponse"
@@ -21,7 +22,7 @@
   ],
   "content_scripts": [
     {
-      "matches": ["*://*.linkedin.com/jobs/*"],
+      "matches": ["*://*.linkedin.com/*"],
       "js": ["dist/content/index.js"],
       "run_at": "document_idle"
     }

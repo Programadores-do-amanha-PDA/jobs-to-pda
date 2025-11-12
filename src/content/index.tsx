@@ -4,7 +4,6 @@ import "../css/input.css";
 // Initializes the monitor when the DOM is ready
 console.log("Jobs To PdA: 🚀 Starting extension...");
 
-console.log(document.readyState);
 if (document.readyState === "loading") {
   console.log("Jobs To PdA: ⏳ Waiting for DOM to load...");
   document.addEventListener("DOMContentLoaded", () => {
