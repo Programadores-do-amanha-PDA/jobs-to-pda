@@ -25,9 +25,13 @@ export default defineConfig({
                 target: target === 'firefox' ? 'firefox-desktop' : 'chromium',
                 startUrl: process.env.START_URL?.split(','),
             },
+            disableAutoLaunch: false,
         }) as unknown as PluginOption,
         react(),
     ],
+    build: {
+        watch: process.env.WATCH === 'true' ? {} : null,
+    },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),

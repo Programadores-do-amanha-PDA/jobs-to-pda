@@ -5,12 +5,14 @@
     "license": "MIT",
     "scripts": {
         "dev": "vite dev",
-        "dev:chrome": "cross-env TARGET=chrome vite dev",
-        "dev:firefox": "cross-env TARGET=firefox vite dev",
+        "dev:chrome": "cross-env TARGET=chrome vite",
+        "dev:firefox": "cross-env TARGET=firefox vite",
+        "watch:chrome": "cross-env TARGET=chrome WATCH=true vite build --watch",
+        "watch:firefox": "cross-env TARGET=firefox WATCH=true vite build --watch",
         "lint": "web-ext lint --source-dir=dist",
         "lint:source": "prettier --check .",
         "format": "prettier --write .",
-        "build": "vite build",
+        "build": "cross-env TARGET=chrome vite build && cross-env TARGET=firefox vite build",
         "build:chrome": "cross-env TARGET=chrome vite build && cross-env TARGET=chrome tsx scripts/zip-after-build.ts",
         "build:firefox": "cross-env TARGET=firefox vite build && cross-env TARGET=firefox tsx scripts/zip-after-build.ts",
         "prepare": "husky"
