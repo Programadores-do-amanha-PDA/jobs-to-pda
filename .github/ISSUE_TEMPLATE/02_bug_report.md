@@ -1,34 +1,29 @@
 ---
 name: Bug Report
-description: File a bug report.
-title: "[Bug]: "
+about: Report a bug or unexpected behavior
+title: "[BUG] "
 labels: ["bug"]
+assignees: []
+milestone: ""
 ---
 
-### Description
+## Bug Description
 
-<!-- A clear and concise description of what the bug is. -->
+A clear and concise description of what the bug is.
 
-### Steps to Reproduce
+## Steps to Reproduce
 
-1.
-2.
-3.
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
 
-### Expected Behavior
+## Expected Behavior
 
-<!-- What did you expect to happen? -->
+A clear and concise description of what you expected to happen.
 
-### Actual Behavior
+## Environment
 
-<!-- What actually happened? -->
-
-### Screenshots/Logs
-
-<!-- If applicable, add screenshots or log excerpts to help explain your problem. -->
-
-### Environment
-
-- OS:
-- Software Version:
-- Browser:
+- OS: [e.g. Windows 10]
+- Browser: [e.g. Chrome 90]
+- Version: [e.g. 1.0.0]
