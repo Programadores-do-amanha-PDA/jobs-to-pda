@@ -5,11 +5,12 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev:webpack": "webpack -w",
-    "dev:firefox": "web-ext run --source-dir=. --firefox=flatpak:org.mozilla.firefox --ignore-files=node_modules/ src/ webpack.config.js tsconfig.json",
-    "lint": "web-ext lint",
-    "format": "yarn lint && prettier --write .",
-    "build": "yarn format && webpack && web-ext build -a dist --overwrite-dest",
+    "dev": "vite build --watch",
+    "dev:firefox": "web-ext run --source-dir=dist --firefox=flatpak:org.mozilla.firefox",
+    "lint": "web-ext lint --source-dir=dist",
+    "lint:source": "prettier --check .",
+    "format": "prettier --write .",
+    "build": "vite build && web-ext build --source-dir=dist -a dist --overwrite-dest",
     "prepare": "husky"
   },
   "peerDependencies": {
@@ -17,25 +18,21 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
+    "@samrum/vite-plugin-web-extension": "^5.1.1",
     "@tsconfig/recommended": "^1.0.11",
     "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.23",
     "@types/webextension-polyfill": "^0.10.7",
-    "css-loader": "^7.0.0",
-    "html-webpack-plugin": "^5.6.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
-    "postcss-loader": "^8.2.0",
     "prettier": "3.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "style-loader": "^3.3.4",
-    "ts-loader": "^9.5.1",
     "typescript": "^5.4.3",
+    "vite": "^5.4.11",
     "web-ext": "^7.11.0",
-    "webextension-polyfill": "^0.10.0",
-    "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4"
+    "webextension-polyfill": "^0.10.0"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

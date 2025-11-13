@@ -4,40 +4,33 @@
   "version": "1.0",
   "description": "Firefox extension to share Jobs for PdA Platform.",
   "icons": {
-    "48": "public/icon.48.png"
+    "48": "icon.48.png"
   },
   "background": {
-    "scripts": ["dist/background/index.js"]
+    "scripts": ["src/background/index.ts"],
+    "type": "module"
   },
-  "permissions": [
-    "storage",
-    "tabs",
-    "scripting",
-    "webRequest",
-    "webRequestBlocking",
-    "webRequestFilterResponse"
-  ],
-  "host_permissions": [
-    "*://*.linkedin.com/jobs/search/*",
-    "*://*.linkedin.com/voyager/api/*"
-  ],
+  "permissions": ["storage", "tabs", "scripting"],
+  "host_permissions": ["*://*.linkedin.com/*"],
   "content_scripts": [
     {
       "matches": ["*://*.linkedin.com/*"],
-      "js": ["dist/content/index.js"],
+      "js": ["src/content/index.tsx"],
+      "css": ["src/css/input.css"],
       "run_at": "document_idle"
     }
   ],
   "action": {
     "default_icon": {
-      "64": "public/icon.64.png"
+      "64": "icon.64.png"
     },
     "default_title": "Jobs to PdA",
-    "default_popup": "dist/popup/index.html"
+    "default_popup": "src/popup/index.html"
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "{a1b2c3d4-e5f6-7890-abcd-ef1234567890}"
+      "id": "{a1b2c3d4-e5f6-7890-abcd-ef1234567890}",
+      "strict_min_version": "109.0"
     }
   }
 }
