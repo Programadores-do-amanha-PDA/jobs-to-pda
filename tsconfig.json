@@ -7,7 +7,13 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "allowJs": true,
-    "moduleResolution": "node"
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "types": ["vite/client"]
   },
   "include": ["src/**/*"]
 }
