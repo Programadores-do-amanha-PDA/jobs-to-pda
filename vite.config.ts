@@ -1,18 +1,31 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import webExtension from "@samrum/vite-plugin-web-extension";
-import manifest from "./manifest.json";
+import webExtension, { readJsonFile } from "vite-plugin-web-extension";
+
+const target = process.env.TARGET || "chrome";
 
 export default defineConfig({
+  define: {
+    __BROWSER__: JSON.stringify(target),
+  },
   plugins: [
-    react(),
     webExtension({
-      manifest: manifest as any,
-      useDynamicUrlWebAccessibleResources: false,
-      additionalInputs: {
-        html: ["src/popup/index.html"],
+      browser: target,
+      manifest: () => {
+        // Use `readJsonFile` instead of import/require to avoid caching during rebuild.
+        const pkg = readJsonFile("package.json");
+        const template = readJsonFile("manifest.json");
+        return {
+          ...template,
+          version: pkg.version,
+        };
+      },
+      webExtConfig: {
+        target: target === "firefox" ? "firefox-desktop" : "chromium",
+        startUrl: process.env.START_URL?.split(","),
       },
     }),
+    react(),
   ],
   build: {
     outDir: "dist",
@@ -20,9 +33,7 @@ export default defineConfig({
     rollupOptions: {
       external: ["chromium-bidi/lib/cjs/bidiMapper/BidiMapper.js"],
       output: {
-        entryFileNames: "[name].js",
-        chunkFileNames: "[name].js",
-        assetFileNames: "[name].[ext]",
+        inlineDynamicImports: false,
       },
     },
   },
@@ -37,11 +48,11 @@ export default defineConfig({
       "@supabase/auth-js": "@supabase/auth-js",
     },
   },
-  server: {
-    port: 5173,
-    strictPort: true,
-    hmr: {
-      port: 5173,
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: "globalThis",
+      },
     },
   },
 });

@@ -5,12 +5,15 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "vite build --watch",
-    "dev:firefox": "web-ext run --source-dir=dist --firefox=flatpak:org.mozilla.firefox",
+    "dev": "vite dev",
+    "dev:chrome": "cross-env TARGET=chrome vite dev",
+    "dev:firefox": "cross-env TARGET=firefox vite dev",
     "lint": "web-ext lint --source-dir=dist",
     "lint:source": "prettier --check .",
     "format": "prettier --write .",
-    "build": "vite build && web-ext build --source-dir=dist -a dist --overwrite-dest",
+    "build": "vite build",
+    "build:chrome": "cross-env TARGET=chrome vite build && cross-env TARGET=chrome tsx scripts/zip-after-build.ts",
+    "build:firefox": "cross-env TARGET=firefox vite build && cross-env TARGET=firefox tsx scripts/zip-after-build.ts",
     "prepare": "husky"
   },
   "peerDependencies": {
@@ -18,24 +21,31 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@samrum/vite-plugin-web-extension": "^5.1.1",
     "@tsconfig/recommended": "^1.0.11",
     "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.23",
     "@types/webextension-polyfill": "^0.10.7",
     "@vitejs/plugin-react": "^4.3.4",
+    "cross-env": "^10.1.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "prettier": "3.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "tslib": "^2.8.1",
+    "tsx": "^4.20.6",
     "typescript": "^5.4.3",
     "vite": "^5.4.11",
+    "vite-plugin-web-extension": "^4.5.0",
     "web-ext": "^7.11.0",
-    "webextension-polyfill": "^0.10.0"
+    "webextension-polyfill": "^0.10.0",
+    "zip-a-folder": "^3.1.9"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
+  },
+  "resolutions": {
+    "vite": "^5.4.11"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.17",

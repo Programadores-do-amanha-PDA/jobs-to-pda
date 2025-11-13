@@ -1,0 +1,4 @@
+{
+  "chromiumBinary": "/usr/bin/chromium-browser",
+  "firefox": "flatpak:org.mozilla.firefox"
+}

@@ -6,7 +6,11 @@
   "icons": {
     "48": "icon.48.png"
   },
-  "background": {
+  "{{chrome}}.background": {
+    "service_worker": "src/background/index.ts",
+    "type": "module"
+  },
+  "{{firefox}}.background": {
     "scripts": ["src/background/index.ts"],
     "type": "module"
   },
@@ -27,10 +31,19 @@
     "default_title": "Jobs to PdA",
     "default_popup": "src/popup/index.html"
   },
-  "browser_specific_settings": {
+  "{{firefox}}.browser_specific_settings": {
     "gecko": {
       "id": "{a1b2c3d4-e5f6-7890-abcd-ef1234567890}",
       "strict_min_version": "109.0"
     }
-  }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["*.js", "*.css", "*.png", "*.svg"],
+      "matches": ["*://*.linkedin.com/*"]
+    }
+  ]
 }
