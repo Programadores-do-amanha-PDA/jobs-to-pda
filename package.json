@@ -1,57 +1,67 @@
 {
-  "name": "community-jobs-extension",
-  "version": "0.0.1",
-  "description": "Firefox extension for Programadores do Amanhã community",
-  "license": "MIT",
-  "private": true,
-  "scripts": {
-    "dev": "vite dev",
-    "dev:chrome": "cross-env TARGET=chrome vite dev",
-    "dev:firefox": "cross-env TARGET=firefox vite dev",
-    "lint": "web-ext lint --source-dir=dist",
-    "lint:source": "prettier --check .",
-    "format": "prettier --write .",
-    "build": "vite build",
-    "build:chrome": "cross-env TARGET=chrome vite build && cross-env TARGET=chrome tsx scripts/zip-after-build.ts",
-    "build:firefox": "cross-env TARGET=firefox vite build && cross-env TARGET=firefox tsx scripts/zip-after-build.ts",
-    "prepare": "husky"
-  },
-  "peerDependencies": {
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
-  },
-  "devDependencies": {
-    "@tsconfig/recommended": "^1.0.11",
-    "@types/react": "^18.2.74",
-    "@types/react-dom": "^18.2.23",
-    "@types/webextension-polyfill": "^0.10.7",
-    "@vitejs/plugin-react": "^4.3.4",
-    "cross-env": "^10.1.0",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
-    "prettier": "3.2.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tslib": "^2.8.1",
-    "tsx": "^4.20.6",
-    "typescript": "^5.4.3",
-    "vite": "^5.4.11",
-    "vite-plugin-web-extension": "^4.5.0",
-    "web-ext": "^7.11.0",
-    "webextension-polyfill": "^0.10.0",
-    "zip-a-folder": "^3.1.9"
-  },
-  "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
-  },
-  "resolutions": {
-    "vite": "^5.4.11"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.81.1",
-    "@tailwindcss/postcss": "^4.1.17",
-    "postcss": "^8.5.6",
-    "string-strip-html": "^13.5.0",
-    "tailwindcss": "^4.1.17"
-  }
+    "name": "community-jobs-extension",
+    "version": "0.0.1",
+    "description": "Firefox extension for Programadores do Amanhã community",
+    "license": "MIT",
+    "private": true,
+    "scripts": {
+        "dev": "vite dev",
+        "dev:chrome": "cross-env TARGET=chrome vite dev",
+        "dev:firefox": "cross-env TARGET=firefox vite dev",
+        "lint": "web-ext lint --source-dir=dist",
+        "lint:source": "prettier --check .",
+        "format": "prettier --write .",
+        "build": "vite build",
+        "build:chrome": "cross-env TARGET=chrome vite build && cross-env TARGET=chrome tsx scripts/zip-after-build.ts",
+        "build:firefox": "cross-env TARGET=firefox vite build && cross-env TARGET=firefox tsx scripts/zip-after-build.ts",
+        "prepare": "husky"
+    },
+    "peerDependencies": {
+        "react": "^17.0.0 || ^18.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0"
+    },
+    "devDependencies": {
+        "@eslint/css": "^0.14.1",
+        "@eslint/js": "^9.39.1",
+        "@eslint/json": "^0.14.0",
+        "@eslint/markdown": "^7.5.1",
+        "@tsconfig/recommended": "^1.0.11",
+        "@types/react": "^18.2.74",
+        "@types/react-dom": "^18.2.23",
+        "@types/webextension-polyfill": "^0.10.7",
+        "@vitejs/plugin-react": "^4.3.4",
+        "cross-env": "^10.1.0",
+        "eslint": "^9.39.1",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-react": "^7.37.5",
+        "globals": "^16.5.0",
+        "husky": "^9.0.11",
+        "jiti": "^2.6.1",
+        "lint-staged": "^15.2.2",
+        "prettier": "3.2.5",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "tslib": "^2.8.1",
+        "tsx": "^4.20.6",
+        "typescript": "^5.4.3",
+        "typescript-eslint": "^8.46.4",
+        "vite": "^5.4.11",
+        "vite-plugin-web-extension": "^4.5.0",
+        "web-ext": "^7.11.0",
+        "webextension-polyfill": "^0.10.0",
+        "zip-a-folder": "^3.1.9"
+    },
+    "lint-staged": {
+        "**/*": "prettier --write --ignore-unknown"
+    },
+    "resolutions": {
+        "vite": "^5.4.11"
+    },
+    "dependencies": {
+        "@supabase/supabase-js": "^2.81.1",
+        "@tailwindcss/postcss": "^4.1.17",
+        "postcss": "^8.5.6",
+        "string-strip-html": "^13.5.0",
+        "tailwindcss": "^4.1.17"
+    }
 }
