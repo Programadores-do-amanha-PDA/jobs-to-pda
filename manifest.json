@@ -1,49 +1,49 @@
 {
-  "manifest_version": 3,
-  "name": "Jobs to PdA",
-  "version": "1.0",
-  "description": "Firefox extension to share Jobs for PdA Platform.",
-  "icons": {
-    "48": "icon.48.png"
-  },
-  "{{chrome}}.background": {
-    "service_worker": "src/background/index.ts",
-    "type": "module"
-  },
-  "{{firefox}}.background": {
-    "scripts": ["src/background/index.ts"],
-    "type": "module"
-  },
-  "permissions": ["storage", "tabs", "scripting"],
-  "host_permissions": ["*://*.linkedin.com/*"],
-  "content_scripts": [
-    {
-      "matches": ["*://*.linkedin.com/*"],
-      "js": ["src/content/index.tsx"],
-      "css": ["src/css/input.css"],
-      "run_at": "document_idle"
-    }
-  ],
-  "action": {
-    "default_icon": {
-      "64": "icon.64.png"
+    "manifest_version": 3,
+    "name": "Jobs to PdA",
+    "version": "1.0",
+    "description": "Firefox extension to share Jobs for PdA Platform.",
+    "icons": {
+        "48": "icon.48.png"
     },
-    "default_title": "Jobs to PdA",
-    "default_popup": "src/popup/index.html"
-  },
-  "{{firefox}}.browser_specific_settings": {
-    "gecko": {
-      "id": "{a1b2c3d4-e5f6-7890-abcd-ef1234567890}",
-      "strict_min_version": "109.0"
-    }
-  },
-  "content_security_policy": {
-    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
-  },
-  "web_accessible_resources": [
-    {
-      "resources": ["*.js", "*.css", "*.png", "*.svg"],
-      "matches": ["*://*.linkedin.com/*"]
-    }
-  ]
+    "{{chrome}}.background": {
+        "service_worker": "background/index.ts",
+        "type": "module"
+    },
+    "{{firefox}}.background": {
+        "scripts": ["background/index.ts"],
+        "type": "module"
+    },
+    "permissions": ["storage", "tabs", "scripting"],
+    "host_permissions": ["*://*.linkedin.com/*"],
+    "content_scripts": [
+        {
+            "matches": ["*://*.linkedin.com/*"],
+            "js": ["content/index.tsx"],
+            "css": ["src/css/input.css"],
+            "run_at": "document_idle"
+        }
+    ],
+    "action": {
+        "default_icon": {
+            "64": "icon.64.png"
+        },
+        "default_title": "Jobs to PdA",
+        "default_popup": "popup/index.html"
+    },
+    "{{firefox}}.browser_specific_settings": {
+        "gecko": {
+            "id": "{a1b2c3d4-e5f6-7890-abcd-ef1234567890}",
+            "strict_min_version": "109.0"
+        }
+    },
+    "content_security_policy": {
+        "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["*.js", "*.css", "*.png", "*.svg"],
+            "matches": ["*://*.linkedin.com/*"]
+        }
+    ]
 }
