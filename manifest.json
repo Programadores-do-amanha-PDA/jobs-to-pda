@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Jobs to PdA",
     "version": "1.0",
-    "description": "Firefox extension to share Jobs for PdA Platform.",
+    "description": "Web extension to share Jobs for PdA Platform.",
     "icons": {
         "48": "icon.48.png"
     },

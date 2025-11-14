@@ -1,28 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { IconSvg } from '../../../assets/icons/icon-svg'
 
-interface LinkedinButtonProps {
-    onClick?: () => void
-}
+import PdASymbolYellowBackground from '@/assets/logos/pda-symbol-yellow-background.png'
+import { Button } from '@/components/ui/button'
+import { LinkedinButtonPropsT } from '../types'
 
-export const LinkedinButton: React.FC<LinkedinButtonProps> = ({ onClick }) => {
+export const LinkedinButton: React.FC<LinkedinButtonPropsT> = ({ onClick }) => {
     return (
-        <button
+        <Button
             id="job-to-pda"
-            className="jobs-apply-button artdeco-button artdeco-button--2 artdeco-button--primary ember-view ml2 bg-[#eddc11]! hover:bg-[#ddcc10]! text-zinc-600! hover:text-zinc-700! h-full flex items-center"
+            className="jobs-apply-button artdeco-button artdeco-button--2 artdeco-button--primary ember-view ml2 bg-[#eddc11]! hover:bg-[#ddcc10]! h-full flex items-center"
             onClick={onClick}
             type="button"
         >
-            <span
-                dangerouslySetInnerHTML={{ __html: IconSvg }}
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                }}
-            />
+            <img src={PdASymbolYellowBackground} className="size-8" />
             <span className="artdeco-button__text">Salvar</span>
-        </button>
+        </Button>
     )
 }
 
