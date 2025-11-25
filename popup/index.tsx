@@ -2,7 +2,7 @@ import React from 'react'
 import { RouterProvider } from 'react-router/dom'
 import { createRoot } from 'react-dom/client'
 import { Toaster } from '@/components/ui/sonner'
-import { routers } from '@/router'
+import { router } from '@/router'
 import '@/styles/input.css'
 import AuthProvider from '@/providers/auth-provider'
 import PopupLayout from '@/components/shared/layouts/pop-up-layout'
@@ -13,7 +13,7 @@ if (root) {
         <>
             <PopupLayout>
                 <AuthProvider>
-                    <RouterProvider router={routers} />
+                    <RouterProvider router={router()} />
                 </AuthProvider>
             </PopupLayout>
             <Toaster />

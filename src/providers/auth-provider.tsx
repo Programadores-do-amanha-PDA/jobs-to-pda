@@ -1,21 +1,23 @@
-'use client'
 import { useEffect } from 'react'
-// import PageLoader from "@/components/shared/page-loader";
+import CustomLoader from '@/components/shared/custom-loader'
 import { useAuthStore } from '@/stores/auth-store'
+import React from 'react'
 
 export default function AuthProvider({
     children,
 }: {
     children: React.ReactNode
 }) {
-    const { loading, fetchSession } = useAuthStore()
+    const { loading, fetchSession, user } = useAuthStore()
+
+    console.log(user)
 
     useEffect(() => {
         fetchSession()
     }, [])
 
     if (loading) {
-        // return <PageLoader />;
+        return <CustomLoader />
     }
 
     return children

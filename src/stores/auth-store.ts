@@ -16,7 +16,6 @@ import { JwtPayloadT, ProfileT, AuthActionsT, AuthStateT } from '@/types'
 
 const initialState: AuthStateT = {
     user: null,
-    userRole: null,
     permissions: [],
     loading: true,
 }
@@ -27,7 +26,6 @@ export const useAuthStore = create<AuthStateT & AuthActionsT>()(
             ...initialState,
 
             setUser: (user) => set({ user }),
-            setUserRole: (userRole) => set({ userRole }),
             setPermissions: (permissions) => set({ permissions }),
 
             fetchUserPermissions: async (role) => {
@@ -68,7 +66,6 @@ export const useAuthStore = create<AuthStateT & AuthActionsT>()(
                 } catch {
                     set({
                         user: null,
-                        userRole: null,
                         permissions: [],
                         loading: false,
                     })
@@ -87,8 +84,6 @@ export const useAuthStore = create<AuthStateT & AuthActionsT>()(
                         set({ ...initialState, loading: false })
                         return
                     }
-
-                    set({ userRole: jwt.user_role })
 
                     // Fetch user profile and permissions in parallel
                     await Promise.all([

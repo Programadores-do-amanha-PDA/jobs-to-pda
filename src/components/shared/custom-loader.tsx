@@ -1,0 +1,22 @@
+import React from 'react'
+import pdaSymbolWhiteBackground from '@/assets/logos/pda-symbol-white-background.png'
+import pdaSymbolPurpleBackground from '@/assets/logos/pda-symbol-purple-background.png'
+
+const CustomLoader = () => {
+    return (
+        <div className="w-full h-full flex flex-col items-center justify-center gap-6 p-6 md:p-10">
+            <img
+                src={pdaSymbolWhiteBackground}
+                alt="Programadores do Amanhã. Logo"
+                className="animate-spin dark:hidden size-20"
+            />
+            <img
+                src={pdaSymbolPurpleBackground}
+                alt="Programadores do Amanhã. Logo"
+                className="animate-spin not-dark:hidden size-20"
+            />
+        </div>
+    )
+}
+
+export default CustomLoader

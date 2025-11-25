@@ -23,7 +23,7 @@ const Header = () => {
                 />
             </section>
 
-            <figure className="flex gap-4 items-center">
+            <figure className="w-max flex gap-2 items-center">
                 <Button variant="ghost" size="icon" className="rounded-full!">
                     <LifeBuoy className="size-5" />
                 </Button>

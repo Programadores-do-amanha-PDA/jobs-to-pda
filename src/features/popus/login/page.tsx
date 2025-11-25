@@ -75,7 +75,7 @@ export default function LoginPage() {
             if (!response.error && response.data?.session) {
                 updateAuthState(response.data.session)
                 toast.success('Login realizado com sucesso!')
-                navigate('/')
+                navigate('/home')
                 return
             }
 
