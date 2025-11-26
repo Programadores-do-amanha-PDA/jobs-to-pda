@@ -1,7 +1,15 @@
 import browser from 'webextension-polyfill'
+import { handleAuthMessage } from './message-handlers'
+import type { AuthMessage } from '@/types/message-types'
 
 // Background script to ensure content script is injected when navigating to LinkedIn
 console.log('Jobs To PdA: 🎯 Background script initialized')
+
+// Listen for authentication messages from content scripts
+browser.runtime.onMessage.addListener((message: AuthMessage, sender) => {
+    console.log('Jobs To PdA: 📬 Message received from:', sender.tab?.id)
+    return handleAuthMessage(message)
+})
 
 // Helper function to check if content script is already running
 async function isContentScriptRunning(tabId: number): Promise<boolean> {

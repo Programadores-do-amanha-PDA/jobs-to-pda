@@ -1,4 +1,4 @@
-import LinkedInJobs from '../src/features/linkedin/monitor'
+import LinkedInJobs from '@/features/content/linkedin/monitor'
 
 type LinkedInJobPageType = 'search' | 'collections' | 'view'
 

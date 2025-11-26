@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill'
 import JobsSitesSupported from './jobs-sites-supported'
+import { authModel } from './models/auth.model'
 import '@/styles/input.css'
 
 // Listen for STATUS messages from background script
@@ -9,16 +10,49 @@ browser.runtime.onMessage.addListener((message) => {
     }
 })
 
-// Initializes the monitor when the DOM is ready
-console.log('Jobs To PdA: 🚀 Starting extension...')
+/**
+ * Inicializa o monitor de jobs após verificar autenticação
+ */
+async function initializeExtension() {
+    console.log('Jobs To PdA: 🚀 Starting extension...')
 
-if (document.readyState === 'loading') {
-    console.log('Jobs To PdA: ⏳ Waiting for DOM to load...')
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('Jobs To PdA: ✅ DOM loaded! Starting monitor...')
-        new JobsSitesSupported()
-    })
-} else {
-    console.log('Jobs To PdA: ✅ DOM is already ready! Starting monitor...')
-    new JobsSitesSupported()
+    try {
+        // Busca a sessão do usuário
+        console.log('Jobs To PdA: 🔐 Checking authentication...')
+        await authModel.fetchSession()
+
+        // Verifica se o usuário está autenticado
+        const user = authModel.getUser()
+
+        if (!user) {
+            console.log(
+                'Jobs To PdA: ❌ User not authenticated. Extension will not start.'
+            )
+            return
+        }
+
+        console.log(
+            `Jobs To PdA: ✅ User authenticated: ${user.profile?.full_name || user.email}`
+        )
+
+        // Inicializa o monitor de jobs
+        const startMonitor = () => {
+            console.log('Jobs To PdA: ✅ Starting jobs monitor...')
+            new JobsSitesSupported()
+        }
+
+        // Aguarda o DOM estar pronto
+        if (document.readyState === 'loading') {
+            console.log('Jobs To PdA: ⏳ Waiting for DOM to load...')
+            document.addEventListener('DOMContentLoaded', startMonitor)
+        } else {
+            console.log('Jobs To PdA: ✅ DOM is already ready!')
+            startMonitor()
+        }
+    } catch (error) {
+        console.error('Jobs To PdA: ❌ Error initializing extension:', error)
+    }
 }
+
+// Inicializa a extensão
+initializeExtension()
