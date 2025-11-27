@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 import browser from 'webextension-polyfill'
 
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../../.env.local.js'
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 const extensionStorageAdapter = {
     async getItem(key: string): Promise<string | null> {
