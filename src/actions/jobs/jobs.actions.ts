@@ -1,34 +1,29 @@
 'use server'
 import { supabase } from '@/lib/supabase'
-import { JobT, JobWithApplicationsT } from '@/types/jobs/jobs'
+import {
+    JobWithApplicationsT,
+    createJobP,
+    createJobR,
+    getAllJobsWithApplicationsR,
+} from '@/types'
 
-export const getAllJobsWithApplications = async () => {
-    try {
-        const { data, error } = await supabase
-            .from('jobs')
-            .select('*, applications:job_applications(*)')
+export const getAllJobsWithApplications =
+    async (): Promise<getAllJobsWithApplicationsR> => {
+        try {
+            const { data, error } = await supabase
+                .from('jobs')
+                .select('*, applications:job_applications(*)')
 
-        if (error) throw error
+            if (error) throw error
 
-        return data as JobWithApplicationsT[]
-    } catch (error) {
-        console.error('Error fetching all jobs search:', error)
-        return null
+            return { success: true, jobs: data as JobWithApplicationsT[] }
+        } catch (error) {
+            console.error('Error fetching all jobs search:', error)
+            return { success: false, error: error as string }
+        }
     }
-}
 
-export const createJob = async (
-    job: Omit<
-        JobT,
-        | 'id'
-        | 'created_at'
-        | 'updated_at'
-        | 'deleted_at'
-        | 'messages_sent_discord'
-        | 'is_curated'
-        | 'is_archived'
-    >
-) => {
+export const createJob = async ({ job }: createJobP): Promise<createJobR> => {
     try {
         if (
             !job.job_id ||
@@ -47,12 +42,13 @@ export const createJob = async (
             .from('jobs')
             .insert({ ...job })
             .select()
+            .single()
 
         if (error) throw error
 
-        return data[0]
+        return { success: true, job: data }
     } catch (error) {
         console.error('Error creating job:', error)
-        return null
+        return { success: false, error: error as string }
     }
 }

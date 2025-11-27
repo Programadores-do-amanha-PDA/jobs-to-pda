@@ -1,6 +1,5 @@
-import { getAllJobsWithApplications } from '@/actions/jobs/jobs-with-applications'
-import type { ErrorResponse } from '@/types/message-types'
-import type { JobWithApplicationsT } from '@/types/jobs'
+import { getAllJobsWithApplications } from '@/actions'
+import type { ErrorResponse, JobWithApplicationsT } from '@/types'
 
 // Message types for jobs
 export type JobsMessageType = 'GET_ALL_JOBS_WITH_APPLICATIONS'
