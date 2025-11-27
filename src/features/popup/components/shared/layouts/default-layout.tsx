@@ -7,7 +7,7 @@ export function DefaultLayout({ children }: DefaultLayoutProps) {
     return (
         <ProtectedRoute className="h-full w-full flex flex-col items-center bg-primary p-2 gap-1">
             <Header />
-            <div className="w-full h-full flex bg-background rounded-md p-3">
+            <div className="w-full h-full flex bg-background rounded-md p-3 overflow-y-auto no-scrollbar">
                 {children}
             </div>
         </ProtectedRoute>

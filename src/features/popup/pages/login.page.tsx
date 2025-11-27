@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { LoaderCircle } from 'lucide-react'
+import { IconLoader } from '@tabler/icons-react'
 
 // Actions
 import { signInWithPassword } from '@/actions'
@@ -184,7 +184,7 @@ export function LoginPage() {
                         >
                             {isSubmitting ? (
                                 <>
-                                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                                    <IconLoader className="mr-2 h-4 w-4 animate-spin" />
                                     Entrando...
                                 </>
                             ) : (
