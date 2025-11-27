@@ -1,37 +1,66 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
-import { IconFileCheck, IconSend } from '@tabler/icons-react'
-import { ApplicationsMilestonesCard, JobsOnPlatformCard } from '../components'
+import {
+    ApplicationsMilestonesCard,
+    JobsOnPlatformCard,
+    JobsSentCard,
+} from '../components'
+import { JobsApplicationsCard } from '../components/home/jobs-applications-card'
+import { useJobStore } from '../stores/jobs.store'
+import EmptyState from '../components/shared/empty-state'
+import { IconArrowRight, IconFileSad } from '@tabler/icons-react'
+import { Button } from '@/components/ui/button'
+import Browser from 'webextension-polyfill'
 
 export function HomePage() {
-    const currentApplications = 35
-    const goalApplications = 50
+    const [goalApplications, setGoalApplications] = React.useState(0)
+
+    const { getAllJobs, jobs, isLoading } = useJobStore()
+
+    useEffect(() => {
+        setGoalApplications(40)
+
+        const handleGetJobs = async () => {
+            await getAllJobs()
+            console.log(jobs)
+        }
+
+        handleGetJobs()
+    }, [])
+
+    if (!isLoading && !jobs.length)
+        return (
+            <EmptyState
+                title="Nenhuma vaga encontrada"
+                description="Infelizmente não temos nenhuma vaga para disponibilizar"
+                icon={<IconFileSad />}
+                action={
+                    <Button
+                        variant="link"
+                        className="text-primary-foreground"
+                        onClick={() =>
+                            Browser.tabs.create({
+                                url: 'https://linkedin.com/jobs',
+                            })
+                        }
+                    >
+                        Comece a buscar vagas
+                        <IconArrowRight className="-rotate-12" />
+                    </Button>
+                }
+            />
+        )
 
     return (
         <div className="w-full h-max flex flex-col gap-4">
             <div className="flex gap-4">
-                <section className="w-1/2 h-max flex flex-col items-center justify-center gap-2 border rounded-lg p-2">
-                    <figure className="size-8 flex items-center justify-center rounded-full bg-primary/35 dark:bg-secondary/35">
-                        <IconSend className="size-5 stroke-primary-foreground" />
-                    </figure>
-                    <main>
-                        <p className="text-center text-base font-semibold">
-                            10
-                        </p>
-                        <p className="text-center text-xs">Vagas enviadas</p>
-                    </main>
-                </section>
-                <section className="w-1/2 h-max flex flex-col items-center justify-center gap-2 border rounded-lg p-2">
-                    <figure className="size-8 flex items-center justify-center rounded-full bg-secondary/35 dark:bg-primary">
-                        <IconFileCheck className="size-5 stroke-secondary-foreground" />
-                    </figure>
-                    <main>
-                        <p className="text-center text-base font-semibold">
-                            10
-                        </p>
-                        <p className="text-center text-xs">Vagas inscritas</p>
-                    </main>
-                </section>
+                <JobsSentCard jobsSended={jobs.length} isLoading={isLoading} />
+                <JobsApplicationsCard
+                    applications={
+                        jobs?.flatMap((job) => job.applications).length || 0
+                    }
+                    isLoading={isLoading}
+                />
             </div>
 
             <ApplicationsMilestonesCard
@@ -39,11 +68,14 @@ export function HomePage() {
                     { length: goalApplications / 10 },
                     (_, i) => (i + 1) * 10
                 )}
-                currentApplications={currentApplications}
+                currentApplications={
+                    jobs?.flatMap((job) => job.applications).length || 0
+                }
                 goalApplications={goalApplications}
+                isLoading={isLoading}
             />
 
-            <JobsOnPlatformCard />
+            <JobsOnPlatformCard allJobs={jobs.length} />
         </div>
     )
 }
