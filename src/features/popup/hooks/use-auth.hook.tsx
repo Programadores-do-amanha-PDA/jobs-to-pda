@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { signOut } from '@/actions'
-import { useAuthStore } from '@/stores'
+import { useAuthStore } from '@/features/popup'
 
-export default function useAuth() {
+export const useAuth = () => {
     const store = useAuthStore()
     const navigate = useNavigate()
 

@@ -1,17 +1,18 @@
 import React from 'react'
-import Browser from 'webextension-polyfill'
 
 // Global imports
+import Browser from 'webextension-polyfill'
+import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { LoaderCircle } from 'lucide-react'
 
-// Hooks
-import useAuth from '@/hooks/use-auth'
-
 // Actions
-import { signInWithPassword } from './action'
+import { signInWithPassword } from '@/actions'
+
+// Types
+import { LoginFormDataT, LoginResponseT } from '@/types'
 
 // UI components
 import { Button } from '@/components/ui/button'
@@ -26,13 +27,13 @@ import {
 } from '@/components/ui/form'
 
 // Local imports
-import { LoginFormDataT, LoginResponseT } from '@/types'
-import { loginSchema } from './utils'
-import { useNavigate } from 'react-router'
+import { useAuth, loginSchema } from '@/features/popup'
 
-export default function LoginPage() {
+export function LoginPage() {
     const navigate = useNavigate()
     const { updateAuthState } = useAuth()
+
+    const PLATFORM_PATH = import.meta.env.VITE_PLATFORM_PATH
 
     const form = useForm<LoginFormDataT>({
         resolver: zodResolver(loginSchema),
@@ -53,10 +54,12 @@ export default function LoginPage() {
         try {
             const response: LoginResponseT = await signInWithPassword(data)
 
+            console.log(response)
+
             if (response.error && response.confirmation) {
                 toast.error('Confirme seu email para continuar.')
                 Browser.tabs.create({
-                    url: `/resend-confirmation?email=${encodeURIComponent(
+                    url: `${PLATFORM_PATH}/resend-confirmation?email=${encodeURIComponent(
                         data.email
                     )}`,
                 })
@@ -73,7 +76,7 @@ export default function LoginPage() {
             }
 
             if (!response.error && response.data?.session) {
-                updateAuthState(response.data.session)
+                await updateAuthState(response.data.session)
                 toast.success('Login realizado com sucesso!')
                 navigate('/home')
                 return
@@ -96,7 +99,7 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="w-full mx-auto flex flex-col gap-4">
+        <div className="w-full mx-auto flex flex-col gap-4 justify-center">
             <div className="flex flex-col">
                 <div className="flex flex-col">
                     <p className="text-base font-bold">Entrar</p>
@@ -142,12 +145,19 @@ export default function LoginPage() {
                                         <FormLabel className="font-semibold text-sm">
                                             Senha
                                         </FormLabel>
-                                        <a
-                                            href="https://new-platform-pda.vercel.app/reset-password"
-                                            className="text-sm text-muted-foreground hover:text-primary hover:underline underline-offset-4 transition-colors"
+                                        <Button
+                                            type="button"
+                                            variant="link"
+                                            onClick={() => {
+                                                Browser.tabs.create({
+                                                    url: `${PLATFORM_PATH}/reset-password`,
+                                                    active: true,
+                                                })
+                                            }}
+                                            className="text-sm text-muted-foreground hover:text-primary hover:underline underline-offset-4 transition-colors p-0! w-max! h-max!"
                                         >
                                             Esqueceu a senha?
-                                        </a>
+                                        </Button>
                                     </div>
                                     <FormControl>
                                         <Input

@@ -1,12 +1,10 @@
-import { Navigate } from 'react-router-dom'
-import { useAuthStore } from '@/stores'
 import React from 'react'
 
-interface ProtectedRouteProps {
-    children: React.ReactNode
-}
+import { Navigate } from 'react-router-dom'
 
-export default function ProtectedRoute({ children }: ProtectedRouteProps) {
+import { useAuthStore, ProtectedRouteProps } from '@/features/popup'
+
+export function ProtectedRoute({ children, ...props }: ProtectedRouteProps) {
     const { user, loading } = useAuthStore()
 
     // Se ainda está carregando, o AuthProvider já mostra o loader
@@ -15,5 +13,5 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
         return <Navigate to="/login" replace />
     }
 
-    return <>{children}</>
+    return <div {...props}>{children}</div>
 }

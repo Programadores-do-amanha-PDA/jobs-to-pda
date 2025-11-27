@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Moon, Sun } from 'lucide-react'
-import { Button } from '../ui/button'
 
-const ThemeSwitcher: React.FC = () => {
+import { Button } from '@/components/ui/button'
+
+export const ThemeSwitcher: React.FC = () => {
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false)
 
     useEffect(() => {
@@ -35,5 +36,3 @@ const ThemeSwitcher: React.FC = () => {
         </Button>
     )
 }
-
-export default ThemeSwitcher
