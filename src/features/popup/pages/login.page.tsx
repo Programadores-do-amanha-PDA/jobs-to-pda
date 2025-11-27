@@ -54,8 +54,6 @@ export function LoginPage() {
         try {
             const response: LoginResponseT = await signInWithPassword(data)
 
-            console.log(response)
-
             if (response.error && response.confirmation) {
                 toast.error('Confirme seu email para continuar.')
                 Browser.tabs.create({

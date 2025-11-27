@@ -9,7 +9,6 @@ export type AuthMessageType =
     | 'GET_PROFILE'
     | 'GET_PERMISSIONS'
     | 'SIGN_OUT'
-    | 'STATUS'
 
 // Request messages
 export interface GetSessionRequest {
@@ -45,7 +44,6 @@ export type AuthMessage =
     | GetProfileRequest
     | GetPermissionsRequest
     | SignOutRequest
-    | StatusRequest
 
 // Response messages
 export interface GetSessionResponse {
@@ -87,5 +85,4 @@ export type AuthMessageResponse =
     | GetProfileResponse
     | GetPermissionsResponse
     | SignOutResponse
-    | StatusResponse
     | ErrorResponse
