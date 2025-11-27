@@ -4,18 +4,28 @@ import { cn } from '@/lib/utils'
 
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-
-import { AuthUserWithProfileT } from '@/types'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 import pdaSymbolYellowBackground from '@/assets/logos/pda-symbol-yellow-background.png'
 import pdaSymbolPurpleBackground from '@/assets/logos/pda-symbol-purple-background.png'
+import { getFirstLastInitials } from '@/utils/get-first-last-initials.utils'
+
+import { useAuth } from '@/features/popup'
 
 type HeaderProps = {
     className?: string
-    user?: AuthUserWithProfileT | null
 } & React.HTMLAttributes<HTMLDivElement>
 
-export const Header = ({ className, user, ...props }: HeaderProps) => {
+export const Header = ({ className, ...props }: HeaderProps) => {
+    const { user, handleSignOut } = useAuth()
+
     return (
         <header
             className={cn(
@@ -39,23 +49,47 @@ export const Header = ({ className, user, ...props }: HeaderProps) => {
             </section>
 
             <figure className="w-max flex gap-2 items-center">
-                {user && (
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="rounded-full!"
-                    >
-                        <Avatar>
-                            <AvatarImage src={user.profile?.avatar_url || ''} />
-                            <AvatarFallback>
-                                {user.user_metadata.name
-                                    .charAt(0)
-                                    .toUpperCase()}
-                            </AvatarFallback>
-                        </Avatar>
-                    </Button>
-                )}
                 <ThemeSwitcher />
+                {user && (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="rounded-full!">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="rounded-full! cursor-pointer"
+                            >
+                                <Avatar>
+                                    <AvatarImage
+                                        src={user.profile?.avatar_url || ''}
+                                    />
+                                    <AvatarFallback className="text-foreground">
+                                        {getFirstLastInitials(
+                                            user.profile?.full_name || ''
+                                        )}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-max" align="end">
+                            <DropdownMenuLabel className="flex flex-col gap-1">
+                                <p className="font-medium">
+                                    {user.profile?.full_name}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                    {user.email}
+                                </p>
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                onClick={handleSignOut}
+                                variant="destructive"
+                                className="cursor-pointer"
+                            >
+                                Sair
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
             </figure>
         </header>
     )

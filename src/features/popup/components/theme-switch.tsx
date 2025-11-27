@@ -1,31 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Moon, Sun } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { useThemeStore } from '@/features/popup/stores/theme.store'
 
 export const ThemeSwitcher: React.FC = () => {
-    const [isDarkMode, setIsDarkMode] = useState<boolean>(false)
-
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme')
-        if (savedTheme) {
-            setIsDarkMode(savedTheme === 'dark')
-        } else {
-            setIsDarkMode(false)
-        }
-    }, [])
-
-    useEffect(() => {
-        const theme = isDarkMode ? 'dark' : 'light'
-        document.documentElement.classList.toggle('dark', isDarkMode)
-        localStorage.setItem('theme', theme)
-    }, [isDarkMode])
+    const isDarkMode = useThemeStore((state) => state.isDarkMode)
+    const toggleTheme = useThemeStore((state) => state.toggleTheme)
 
     return (
         <Button
             variant="ghost"
             size="icon"
-            onClick={() => setIsDarkMode((prev) => !prev)}
+            onClick={toggleTheme}
             className="rounded-full!"
         >
             {isDarkMode ? (
