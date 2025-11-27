@@ -19,7 +19,7 @@ export async function handleAuthMessage(
 ): Promise<AuthMessageResponse> {
     try {
         console.log(
-            'Jobs To PdA: 📨 Background received message:',
+            'Jobs To PdA: 📨 Background received auth message:',
             message.type
         )
 
@@ -83,22 +83,16 @@ export async function handleAuthMessage(
                 }
             }
 
-            case 'STATUS': {
-                return {
-                    status: 'running',
-                }
-            }
-
             default: {
                 const errorResponse: ErrorResponse = {
                     success: false,
-                    error: 'Unknown message type',
+                    error: 'Unknown auth message type',
                 }
                 return errorResponse
             }
         }
     } catch (error) {
-        console.error('Jobs To PdA: ❌ Error handling message:', error)
+        console.error('Jobs To PdA: ❌ Error handling auth message:', error)
         const errorResponse: ErrorResponse = {
             success: false,
             error: error instanceof Error ? error.message : 'Unknown error',
