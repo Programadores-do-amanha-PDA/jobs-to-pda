@@ -1,1 +1,1 @@
-export * from './jobs-with-applications'
+export * from './jobs.actions'
