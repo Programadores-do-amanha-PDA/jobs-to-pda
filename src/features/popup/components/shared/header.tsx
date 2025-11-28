@@ -59,9 +59,11 @@ export const Header = ({ className, ...props }: HeaderProps) => {
                                 className="rounded-full! cursor-pointer"
                             >
                                 <Avatar>
-                                    <AvatarImage
-                                        src={user.profile?.avatar_url || ''}
-                                    />
+                                    {user.profile?.avatar_url && (
+                                        <AvatarImage
+                                            src={user.profile.avatar_url}
+                                        />
+                                    )}
                                     <AvatarFallback className="text-foreground">
                                         {getFirstLastInitials(
                                             user.profile?.full_name || ''

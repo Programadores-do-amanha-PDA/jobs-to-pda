@@ -22,8 +22,8 @@ export type JobProviderT = 'linkedin'
 
 export interface CompanyT {
     name: string
-    logo: string
-    url?: string
+    img: string
+    link?: string
 }
 
 export type JobApplicationStatusT = 'applied' | 'rejected' | 'accepted'
