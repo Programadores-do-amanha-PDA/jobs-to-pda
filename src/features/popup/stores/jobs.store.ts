@@ -20,9 +20,11 @@ export const useJobStore = create<JobState & JobActions>()(
             getAllJobs: async () => {
                 try {
                     set({ isLoading: true })
+
                     const jobsResponse = await getAllJobsWithApplications()
-                    if (!jobsResponse) throw 'no jobs response'
-                    set({ jobs: jobsResponse })
+                    if (!jobsResponse.success) throw 'no jobs response'
+
+                    set({ jobs: jobsResponse.jobs })
                     return true
                 } catch (error) {
                     console.error(error)
@@ -39,9 +41,14 @@ export const useJobStore = create<JobState & JobActions>()(
                 try {
                     const jobCreated = await createJob({ job })
 
-                    if (!jobCreated) throw 'job is not created successfully'
+                    if (
+                        !jobCreated.success ||
+                        jobCreated.error ||
+                        !jobCreated.job
+                    )
+                        throw 'job is not created successfully'
 
-                    set({ jobs: [...get().jobs, jobCreated] })
+                    set({ jobs: [...get().jobs, jobCreated.job] })
                     toast.success('Sucesso ao criar a vaga!')
                     return true
                 } catch (error) {

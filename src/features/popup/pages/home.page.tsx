@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 
 import {
     ApplicationsMilestonesCard,
@@ -17,6 +17,11 @@ export function HomePage() {
 
     const { getAllJobs, jobs, isLoading } = useJobStore()
 
+    const applications = useMemo(
+        () => jobs?.flatMap((job) => job.applications),
+        [jobs]
+    )
+
     useEffect(() => {
         setGoalApplications(40)
 
@@ -28,7 +33,7 @@ export function HomePage() {
         handleGetJobs()
     }, [])
 
-    if (!isLoading && !jobs.length)
+    if (isLoading && jobs.length === 0)
         return (
             <EmptyState
                 title="Nenhuma vaga encontrada"
@@ -56,9 +61,7 @@ export function HomePage() {
             <div className="flex gap-4">
                 <JobsSentCard jobsSended={jobs.length} isLoading={isLoading} />
                 <JobsApplicationsCard
-                    applications={
-                        jobs?.flatMap((job) => job.applications).length || 0
-                    }
+                    applications={applications.length || 0}
                     isLoading={isLoading}
                 />
             </div>
@@ -68,9 +71,7 @@ export function HomePage() {
                     { length: goalApplications / 10 },
                     (_, i) => (i + 1) * 10
                 )}
-                currentApplications={
-                    jobs?.flatMap((job) => job.applications).length || 0
-                }
+                currentApplications={applications.length || 0}
                 goalApplications={goalApplications}
                 isLoading={isLoading}
             />
