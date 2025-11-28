@@ -37,6 +37,49 @@ export class AuthModel {
     }
 
     /**
+     * Envia mensagem com retry para lidar com background script não inicializado
+     */
+    private async sendMessageWithRetry(
+        message: unknown,
+        maxRetries = 3,
+        delayMs = 200
+    ): Promise<unknown> {
+        let lastError: Error | null = null
+
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                const response = await browser.runtime.sendMessage(message)
+                return response
+            } catch (error) {
+                lastError = error as Error
+                const errorMessage = lastError.message || String(error)
+
+                // Se o erro é "Receiving end does not exist", tenta novamente
+                if (
+                    errorMessage.includes('Receiving end does not exist') ||
+                    errorMessage.includes('Could not establish connection')
+                ) {
+                    if (attempt < maxRetries) {
+                        console.log(
+                            `Jobs To PdA: ⏳ Background script not ready, retrying (${attempt}/${maxRetries})...`
+                        )
+                        await new Promise((resolve) =>
+                            setTimeout(resolve, delayMs)
+                        )
+                        continue
+                    }
+                }
+
+                // Para outros erros, lança imediatamente
+                throw error
+            }
+        }
+
+        // Se chegou aqui, esgotou todas as tentativas
+        throw lastError || new Error('Failed to send message after retries')
+    }
+
+    /**
      * Obtém o usuário atual
      */
     getUser(): AuthUserWithProfileT | null {
@@ -90,10 +133,10 @@ export class AuthModel {
                 'Jobs To PdA: 📤 Requesting permissions for role:',
                 role
             )
-            const response = await browser.runtime.sendMessage({
+            const response = (await this.sendMessageWithRetry({
                 type: 'GET_PERMISSIONS',
                 role,
-            })
+            })) as GetPermissionsResponse | ErrorResponse
 
             if ('success' in response && response.success) {
                 const permissionsResponse = response as GetPermissionsResponse
@@ -118,10 +161,10 @@ export class AuthModel {
     async getUserProfile(jwt: string): Promise<void> {
         try {
             console.log('Jobs To PdA: 📤 Requesting user data')
-            const userResponse = await browser.runtime.sendMessage({
+            const userResponse = (await this.sendMessageWithRetry({
                 type: 'GET_USER',
                 jwt,
-            })
+            })) as GetUserResponse | ErrorResponse
 
             if (!('success' in userResponse) || !userResponse.success) {
                 const errorResponse = userResponse as ErrorResponse
@@ -137,10 +180,10 @@ export class AuthModel {
             }
 
             console.log('Jobs To PdA: 📤 Requesting profile for user:', user.id)
-            const profileResponse = await browser.runtime.sendMessage({
+            const profileResponse = (await this.sendMessageWithRetry({
                 type: 'GET_PROFILE',
                 userId: user.id,
-            })
+            })) as GetProfileResponse | ErrorResponse
 
             if (!('success' in profileResponse) || !profileResponse.success) {
                 const errorResponse = profileResponse as ErrorResponse
@@ -207,9 +250,9 @@ export class AuthModel {
     async fetchSession(): Promise<void> {
         try {
             console.log('Jobs To PdA: 📤 Requesting session from background')
-            const response = await browser.runtime.sendMessage({
+            const response = (await this.sendMessageWithRetry({
                 type: 'GET_SESSION',
-            })
+            })) as GetSessionResponse | ErrorResponse
 
             if (!('success' in response) || !response.success) {
                 const errorResponse = response as ErrorResponse
@@ -234,9 +277,9 @@ export class AuthModel {
     async logout(): Promise<boolean> {
         try {
             console.log('Jobs To PdA: 📤 Requesting sign out')
-            const response = await browser.runtime.sendMessage({
+            const response = (await this.sendMessageWithRetry({
                 type: 'SIGN_OUT',
-            })
+            })) as { success: boolean } | ErrorResponse
 
             if ('success' in response && response.success) {
                 console.log('Jobs To PdA: ✅ Sign out successful')

@@ -7,7 +7,7 @@ interface RouteConfig {
     type: LinkedInJobPageType
 }
 
-class JobsSitesSupported {
+export class JobsSitesSupported {
     private currentMonitor: LinkedInJobs | null = null
     private currentRoute: string = ''
     private observer: MutationObserver | null = null
@@ -36,7 +36,11 @@ class JobsSitesSupported {
     }
 
     private checkRoute() {
+        if (!window) return console.log('Jobs To PdA: ⚠️ Window not found')
+
         const currentUrl = window.location.href
+
+        console.log('Jobs To PdA: 🔍 Current URL:', currentUrl)
 
         // Evita reprocessar a mesma rota
         if (currentUrl === this.currentRoute) {
@@ -132,5 +136,3 @@ class JobsSitesSupported {
         console.log('Jobs To PdA: 🗑️ LinkedInJobsSitesSupported destroyed')
     }
 }
-
-export default JobsSitesSupported

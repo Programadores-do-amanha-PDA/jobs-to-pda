@@ -1,25 +1,32 @@
-class LinkedinJobM {
-    public id: string
+import type { JobSourceT, JobProviderT } from '@/types'
+
+export class LinkedinJobM {
+    public job_id: string
     public title: string
-    public isVerified: boolean
+    public is_verified: boolean
     public link: string
     public description: string
     public details: string[]
     public company: { name: string; img: string }
+    public source: JobSourceT
+    public job_provider: JobProviderT
 
     public static extractJobIdFromUrl(): string | null {
+        if (!window) return null
         const urlMatch = window.location.href.match(/\/jobs\/view\/(\d+)/)
         return urlMatch ? urlMatch[1] : null
     }
 
     constructor(jobId: string, jobPage: Element) {
-        this.id = jobId
+        this.job_id = jobId
         this.title = this.extractJobTitleByJobPage(jobPage)
-        this.isVerified = this.extractIsJobVerifiedByJobPage(jobPage)
+        this.is_verified = this.extractIsJobVerifiedByJobPage(jobPage)
         this.link = this.generateJobLinkByJobId(jobId)
         this.description = this.extractJobDescriptionByJobPage(jobPage)
         this.details = this.extractJobDetailsByJobPage(jobPage)
         this.company = this.extractJobCompanyByJobPage(jobPage)
+        this.source = 'jobs_to_pda'
+        this.job_provider = 'linkedin'
     }
 
     public extractJobTitleByJobPage(jobPage: Element): string {
@@ -47,13 +54,14 @@ class LinkedinJobM {
     public extractJobCompanyByJobPage(jobPage: Element): {
         name: string
         img: string
+        link: string
     } {
         const jobCardTopContainerElement = jobPage.querySelector(
             '.job-details-jobs-unified-top-card__container--two-pane'
         )
 
         const companyElement = jobCardTopContainerElement?.querySelector(
-            '.job-details-jobs-unified-top-card__company-name'
+            '.job-details-jobs-unified-top-card__company-name > a'
         )
 
         // Select company image element
@@ -64,8 +72,9 @@ class LinkedinJobM {
 
         // Extract company name
         const companyName = companyElement?.textContent?.trim() || ''
+        const companyLink = companyElement?.getAttribute('href') || ''
 
-        return { name: companyName, img: companyImageLink }
+        return { name: companyName, img: companyImageLink, link: companyLink }
     }
 
     public extractJobDetailsByJobPage(jobPage: Element): string[] {
@@ -117,5 +126,3 @@ class LinkedinJobM {
         return ''
     }
 }
-
-export default LinkedinJobM

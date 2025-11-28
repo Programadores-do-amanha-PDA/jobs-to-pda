@@ -5,7 +5,9 @@ import PdASymbolYellowBackground from '@/assets/logos/pda-symbol-yellow-backgrou
 import { Button } from '@/components/ui/button'
 import { LinkedinButtonPropsT } from '../types'
 
-export const LinkedinButton: React.FC<LinkedinButtonPropsT> = ({ onClick }) => {
+export const SendJobToPdAButton: React.FC<LinkedinButtonPropsT> = ({
+    onClick,
+}) => {
     return (
         <Button
             id="job-to-pda"
@@ -14,18 +16,20 @@ export const LinkedinButton: React.FC<LinkedinButtonPropsT> = ({ onClick }) => {
             type="button"
         >
             <img src={PdASymbolYellowBackground} className="size-8" />
-            <span className="artdeco-button__text">Salvar</span>
+            <span className="artdeco-button__text text-primary-foreground!">
+                Salvar
+            </span>
         </Button>
     )
 }
 
 // Helper function to render the React component into a DOM element
-export const createLinkedinButton = (onClick?: () => void): HTMLElement => {
+export const createSendJobToPdAButton = (onClick?: () => void): HTMLElement => {
     const container = document.createElement('div')
     container.setAttribute('data-pda-button', 'true')
 
     const root = ReactDOM.createRoot(container)
-    root.render(<LinkedinButton onClick={onClick} />)
+    root.render(<SendJobToPdAButton onClick={onClick} />)
 
     return container
 }

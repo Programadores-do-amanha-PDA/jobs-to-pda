@@ -1,7 +1,8 @@
-import { createLinkedinButton } from './components/send-button'
-import JobM from './models/linkedin-job.model'
-
-type linkedInJobPageType = 'search' | 'collections' | 'view'
+import { jobsModel } from '../models/jobs.model'
+import { createLinkedinApplyToJobButton } from './components/apply-to-job-button'
+import { createSendJobToPdAButton } from './components/send-job-to-pda-button'
+import { LinkedinJobM } from './models/linkedin-job.model'
+import { linkedInJobPageType } from './types'
 
 class LinkedInJobs {
     private currentActiveJobCard: Element | null = null
@@ -21,12 +22,23 @@ class LinkedInJobs {
         return new Promise((resolve) => {
             const element = document.querySelector(selector)
             if (element) {
+                console.log(`Jobs To PdA: ✅ Found element: ${selector}`)
                 return resolve(element)
+            }
+
+            // Check if body is available
+            if (!document.body) {
+                console.log('Jobs To PdA: ⚠️ document.body not available yet')
+                setTimeout(() => {
+                    this.waitForElement(selector, timeout).then(resolve)
+                }, 100)
+                return
             }
 
             const observer = new MutationObserver(() => {
                 const element = document.querySelector(selector)
                 if (element) {
+                    console.log(`Jobs To PdA: ✅ Found element: ${selector}`)
                     observer.disconnect()
                     resolve(element)
                 }
@@ -38,6 +50,7 @@ class LinkedInJobs {
             })
 
             setTimeout(() => {
+                console.log(`Jobs To PdA: ⏱️ Timeout waiting for: ${selector}`)
                 observer.disconnect()
                 resolve(null)
             }, timeout)
@@ -117,11 +130,9 @@ class LinkedInJobs {
         console.log('Jobs To PdA: ✅ Job view page found')
         this.initRetryCount = 0
 
-        const jobId = JobM.extractJobIdFromUrl()
+        const jobId = LinkedinJobM.extractJobIdFromUrl()
 
         if (jobId) {
-            this.processJob(currentJobPage, jobId)
-
             // Setup observer for job view page
             this.setupButtonRenderObserver(currentJobPage, jobId)
         }
@@ -135,6 +146,13 @@ class LinkedInJobs {
             '.jobs-search__job-details--wrapper'
         )
         const jobId = activeJobCard?.getAttribute('data-job-id')
+
+        console.log(
+            activeJobCard &&
+                activeJobCard !== this.currentActiveJobCard &&
+                currentJobPage &&
+                jobId
+        )
 
         // Check if the active Job has changed
         if (
@@ -152,14 +170,85 @@ class LinkedInJobs {
         }
     }
 
-    private processJob(jobPage: Element, jobId: string) {
+    private async processJob(jobPage: Element, jobId: string) {
         console.log('Jobs To PdA: 🎯 Processing job')
 
-        const jobModel = new JobM(jobId, jobPage)
-        return jobModel
+        const jobModel = new LinkedinJobM(jobId, jobPage)
+        console.log('Jobs To PdA: ✅ Job processed!', jobModel)
+
+        await jobsModel.createJob({ job: jobModel })
+        this.removeExistingButtons(jobPage)
+        this.renderButtons({ jobPage, jobId })
+        return
+    }
+
+    private removeExistingButtons(jobPage: Element): void {
+        const existingButtons = jobPage.querySelectorAll(
+            '[data-pda-button="true"]'
+        )
+        existingButtons.forEach((button) => {
+            button.remove()
+        })
+    }
+
+    public renderButtons({
+        jobPage,
+        jobId,
+    }: {
+        jobPage: Element
+        jobId: string
+    }): void {
+        const allJobs = jobsModel.getJobs()
+        const currentJob = allJobs?.find((job) => job?.job_id === jobId)
+
+        console.log('currentJob', currentJob)
+
+        // Remove existing buttons before rendering new ones
+        this.removeExistingButtons(jobPage)
+
+        if (!currentJob) {
+            console.log('Jobs To PdA: ⚠️ Current job not found, skipping...')
+            this.renderShareJobToPdAButton(jobPage, jobId)
+            return
+        } else if (
+            !currentJob?.applications ||
+            currentJob?.applications?.length === 0
+        ) {
+            console.log(
+                'Jobs To PdA: ⚠️ Current job has no applications, rendering apply button...'
+            )
+            this.renderApplyToJobOnPdAButton(jobPage, jobId)
+            return
+        }
+
+        // Job has applications, could render different UI here if needed
+        console.log('Jobs To PdA: ✅ Job has applications')
     }
 
     public renderShareJobToPdAButton(jobPage: Element, jobId: string) {
+        const jobSaveButtonElements =
+            jobPage.querySelectorAll('.jobs-save-button')
+
+        if (!jobSaveButtonElements.length) {
+            console.log('Jobs To PdA: Save button not found, skipping...')
+            return
+        }
+
+        jobSaveButtonElements.forEach((saveButton) => {
+            const shareJobButton = createSendJobToPdAButton(() =>
+                this.processJob(jobPage, jobId)
+            )
+
+            saveButton.parentNode?.insertBefore(
+                shareJobButton,
+                saveButton.nextSibling
+            )
+        })
+
+        console.log('Jobs To PdA: ✅ Button inserted!')
+    }
+
+    public renderApplyToJobOnPdAButton(jobPage: Element, jobId: string) {
         const jobSaveButtonElements =
             jobPage.querySelectorAll('.jobs-save-button')
 
@@ -178,11 +267,10 @@ class LinkedInJobs {
                 return
             }
 
-            const shareJobButton = createLinkedinButton(() =>
-                this.processJob(jobPage, jobId)
-            )
+            const applyOnJobToPdAButton = createLinkedinApplyToJobButton(jobId)
+
             jobSaveButtonElements[0]?.parentNode?.insertBefore(
-                shareJobButton,
+                applyOnJobToPdAButton,
                 jobSaveButtonElements[0]?.nextSibling
             )
         } else if (jobSaveButtonElements.length > 1) {
@@ -196,12 +284,11 @@ class LinkedInJobs {
                     return
                 }
 
-                const shareJobButton = createLinkedinButton(() =>
-                    this.processJob(jobPage, jobId)
-                )
+                const applyOnJobToPdAButton =
+                    createLinkedinApplyToJobButton(jobId)
 
                 saveButton.parentNode?.insertBefore(
-                    shareJobButton,
+                    applyOnJobToPdAButton,
                     saveButton.nextSibling
                 )
             })
@@ -213,6 +300,10 @@ class LinkedInJobs {
         if (this.buttonRenderObserver) {
             this.buttonRenderObserver.disconnect()
         }
+
+        console.log('Jobs To PdA: 🎯 Setting up button render observer')
+        // Initial render - render button for current state
+        this.renderButtons({ jobPage: container, jobId })
 
         this.buttonRenderObserver = new MutationObserver((mutations) => {
             // Check if save button was added/modified
@@ -234,7 +325,7 @@ class LinkedInJobs {
                 console.log(
                     'Jobs To PdA: Save button detected in DOM changes, re-rendering...'
                 )
-                this.renderShareJobToPdAButton(container, jobId)
+                this.renderButtons({ jobPage: container, jobId })
             }
         })
 
