@@ -1,14 +1,13 @@
-'use server'
 import { supabase } from '@/lib/supabase'
 import {
     JobWithApplicationsT,
-    createJobP,
-    createJobR,
-    getAllJobsWithApplicationsR,
+    CreateNewJobP,
+    CreateNewJobR,
+    GetAllJobsWithApplicationsR,
 } from '@/types'
 
 export const getAllJobsWithApplications =
-    async (): Promise<getAllJobsWithApplicationsR> => {
+    async (): Promise<GetAllJobsWithApplicationsR> => {
         try {
             const { data, error } = await supabase
                 .from('jobs')
@@ -23,7 +22,9 @@ export const getAllJobsWithApplications =
         }
     }
 
-export const createJob = async ({ job }: createJobP): Promise<createJobR> => {
+export const createJob = async ({
+    job,
+}: CreateNewJobP): Promise<CreateNewJobR> => {
     try {
         if (
             !job.job_id ||
