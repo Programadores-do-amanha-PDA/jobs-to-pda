@@ -1,11 +1,17 @@
-import { handleAuthMessage } from './handlers/auth-handler'
-import { handleStatusMessage } from './handlers/status-handler'
-import { handleJobsMessage } from './handlers/jobs-handler'
+import { handleAuthMessage } from './handlers/auth.handler'
+import { handleStatusMessage } from './handlers/status.handler'
+import { handleJobsMessage } from './handlers/jobs.handler'
+import { handleTabsMessage } from './handlers/tabs.handler'
 import type { AuthMessage } from '@/types/message-types'
-import type { JobsMessage } from './handlers/jobs-handler'
+import type { JobsMessage } from './handlers/jobs.handler'
+import type { TabsMessage } from './handlers/tabs.handler'
 
 // Union type for all possible messages
-export type Message = AuthMessage | JobsMessage | { type: 'STATUS' }
+export type Message =
+    | AuthMessage
+    | JobsMessage
+    | TabsMessage
+    | { type: 'STATUS' }
 
 /**
  * Main message router that delegates to appropriate handlers
@@ -29,7 +35,13 @@ export async function handleMessage(message: Message) {
 
         // Jobs messages
         case 'GET_ALL_JOBS_WITH_APPLICATIONS':
+        case 'GET_ALL_JOBS':
+        case 'CREATE_JOB':
             return handleJobsMessage(message as JobsMessage)
+
+        // Tabs messages
+        case 'CREATE_TAB':
+            return handleTabsMessage(message as TabsMessage)
 
         default:
             return {
@@ -38,6 +50,3 @@ export async function handleMessage(message: Message) {
             }
     }
 }
-
-// Export individual handlers for direct use if needed
-export { handleAuthMessage, handleStatusMessage, handleJobsMessage }
