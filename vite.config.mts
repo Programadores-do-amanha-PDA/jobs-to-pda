@@ -31,6 +31,7 @@ export default defineConfig({
     ],
     build: {
         watch: process.env.WATCH === 'true' ? {} : null,
+        chunkSizeWarningLimit: 1000,
     },
     resolve: {
         alias: {

@@ -42,7 +42,14 @@
     },
     "web_accessible_resources": [
         {
-            "resources": ["*.js", "*.css", "*.png", "*.svg"],
+            "resources": [
+                "*.js",
+                "*.css",
+                "*.png",
+                "*.svg",
+                "assets/**/*.png",
+                "assets/**/*.svg"
+            ],
             "matches": ["*://*.linkedin.com/*"]
         }
     ]
